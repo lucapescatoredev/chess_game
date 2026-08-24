@@ -1,0 +1,43 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+.modal {
+  background: #080809c3;
+  border-radius: 8px;
+  padding: 20px;
+  width: min(90vw, 300px);
+  min-height: min(50vw, 225px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.gameend-main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.gameend-message {
+  font-size: 2rem;
+  margin: 1rem 0 1.5rem 0;
+  text-align: center;
+}
+.gameend-newgame {
+  font-weight: bold;
+  font-size: 1.2rem;
+  background-color: #363638;
+  box-shadow: 3px 8px rgba(0, 0, 0, 0.35);
+  color: #fafafa;
+  height: 3em;
+  border-radius: 10px;
+  cursor: pointer;
+}

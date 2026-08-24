@@ -1,0 +1,26 @@
+.color-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color-selector button {
+  padding: 0.55rem 1rem;
+  border-radius: 0.4rem;
+  color: #fafafa;
+  background: #363638;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+.color-selector button:hover,
+.color-selector button:focus-visible {
+  background: #4a4a4d;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+.color-selector button.selected {
+  color: #0b0b0b;
+  background: #f0d9b5;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.4);
+}

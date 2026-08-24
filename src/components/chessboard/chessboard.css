@@ -1,0 +1,116 @@
+:root {
+  --dark-square: #b58863;
+  --light-square: #f0d9b5;
+  /* --dark-square: #9fa4a9;
+  --light-square: #c2d3cd; */
+}
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+table {
+  display: block;
+  width: min(95vw, 700px);
+  height: min(95vw, 700px);
+  aspect-ratio: 1;
+  border-collapse: collapse;
+}
+tbody {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(8, minmax(0, 1fr));
+  width: 100%;
+  height: 100%;
+}
+.board--flipped {
+  transform: rotate(180deg);
+}
+tr {
+  display: contents;
+}
+td {
+  display: block;
+  position: relative;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+}
+td img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/*Piece animation****************************/
+.piece--moving {
+  position: relative;
+  z-index: 2;
+  animation: move-piece 170ms ease-out;
+}
+@keyframes move-piece {
+  from {
+    translate: calc(var(--move-x) * 100%) calc(var(--move-y) * 100%);
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .piece--moving {
+    animation-duration: 1ms;
+  }
+}
+/*Piece animation****************************/
+.board--flipped td img {
+  transform: rotate(180deg);
+}
+.legal-move::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 40%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  /* background: #226f54; */
+
+  pointer-events: none;
+}
+td:hover {
+  cursor: grab;
+}
+td.drag-over {
+  background-color: #a98163;
+  /* outline-offset: -3px; */
+  cursor: grabbing;
+}
+.black {
+  background-color: var(--dark-square);
+}
+.white {
+  background-color: var(--light-square);
+}
+img.piece {
+  cursor: grab;
+}
+.opacity {
+  opacity: 0;
+}
+.kingChecked {
+  background-color: red;
+}
+.square--check {
+  background-color: #d40000;
+}
+.square--check-mate {
+  background-color: #d40000;
+  transform: rotate(90deg);
+}
