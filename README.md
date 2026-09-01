@@ -5,6 +5,6 @@ Implemented from scratch:
 - Special moves (such as en Passant, castling and promotion)
 - Checkmate and stalemate detection
 
-#Still to implement
+# Still to implement
 - 3 Moves repetetion
 - 50 moves rules draw
