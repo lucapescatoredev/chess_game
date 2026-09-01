@@ -142,7 +142,7 @@ export const getKingMoves = ({
     //king side filtering
     if (
       unavailableSquares.some(
-        (move) => move.x === kingInitialRow && move.y === 5
+        (move) => move.x === kingInitialRow && move.y === 5,
       )
     ) {
       unavailableSquares.push({ x: kingInitialRow, y: 6 });
@@ -150,7 +150,7 @@ export const getKingMoves = ({
     //queen side filtering
     if (
       unavailableSquares.some(
-        (move) => move.x === kingInitialRow && move.y === 3
+        (move) => move.x === kingInitialRow && move.y === 3,
       )
     ) {
       unavailableSquares.push({ x: kingInitialRow, y: 2 });
@@ -160,7 +160,7 @@ export const getKingMoves = ({
   unavailableSquares = unavailableSquares.filter((square) => square.z !== -1);
   // filtering the moves againts the checked ones
   const validMoves: Move[] = moves.filter(
-    (move) => !unavailableSquares.some((u) => move.x === u.x && move.y === u.y)
+    (move) => !unavailableSquares.some((u) => move.x === u.x && move.y === u.y),
   );
   return validMoves;
 };
@@ -169,7 +169,7 @@ export const castleKing = (
   board: string[][],
   color: string,
   y: number,
-  kingState: KingState
+  kingState: KingState,
 ): KingState => {
   const row: number = color === PieceColor.WHITE ? 7 : 0;
   const kingPiece: string = `${color}${PieceType.KING}`;
@@ -204,7 +204,7 @@ export const getChecks = (
   board: string[][],
   enemyColor: PieceColor,
   x: number,
-  y: number
+  y: number,
 ): Move[] => {
   const checks: Move[] = [];
   const { enemyQueen, enemyRook, enemyBishop, enemyKnight } =
@@ -223,7 +223,7 @@ export const getChecks = (
     [enemyBishop, enemyQueen],
     x,
     y,
-    enemyColor
+    enemyColor,
   );
   diagonalSlidingChecks.length && checks.push(...diagonalSlidingChecks);
   const straightSlidingChecks = getSlidingChecks(
@@ -232,7 +232,7 @@ export const getChecks = (
     [enemyRook, enemyQueen],
     x,
     y,
-    enemyColor
+    enemyColor,
   );
   straightSlidingChecks.length && checks.push(...straightSlidingChecks);
   return checks;
@@ -241,7 +241,7 @@ const getPawnsChecks = (
   board: string[][],
   enemyColor: PieceColor,
   x: number,
-  y: number
+  y: number,
 ): Move[] => {
   const checks = [];
   const enemyPawn = `${enemyColor}${PieceType.PAWN}`;
@@ -264,7 +264,7 @@ const getKnightChecks = (
   board: string[][],
   enemyKnight: string,
   x: number,
-  y: number
+  y: number,
 ) => {
   const checks = [];
   for (const [i, j] of knightOffsets) {
@@ -287,7 +287,7 @@ const getSlidingChecks = (
   x: number,
   y: number,
   enemyColor: PieceColor,
-  checkType: CheckType = CheckType.CHECK
+  checkType: CheckType = CheckType.CHECK,
 ): Move[] => {
   let currentSquareIsEnemy = false;
   if (checkType === CheckType.UNAVAVAILABLE) {
@@ -353,6 +353,12 @@ const getSlidingChecks = (
       checks = a.concat(b);
     }
   }
+
+  // When searching for unavailable squares, if any are found,
+  // I also want to consider the square I started searching from as a possible valid square.
+  // // Example: if a bishop is checking the king, the king may be able to capture it,
+  // // provided the bishop is not protected by another piece.
+
   if (checkType === CheckType.UNAVAVAILABLE) {
     checks.length && checks.push({ x, y });
   }
@@ -363,7 +369,7 @@ const getUnavailableSquaresPawns = (
   board: string[][],
   enemyColor: PieceColor,
   x: number,
-  y: number
+  y: number,
 ): Move[] => {
   const unavailableSquares = [];
   const enemyPawn = `${enemyColor}${PieceType.PAWN}`;
@@ -433,7 +439,7 @@ const getUnavailablesSquaresKing = (
   board: string[][],
   enemyKing: string,
   x: number,
-  y: number
+  y: number,
 ): Move[] => {
   const unavailableSquares: Move[] = [];
   kingMoves.forEach((move) => {
@@ -448,7 +454,7 @@ const getUnavailableSquares = (
   board: string[][],
   enemyColor: PieceColor,
   x: number,
-  y: number
+  y: number,
 ): Move[] => {
   const { enemyQueen, enemyRook, enemyBishop, enemyKnight, enemyKing } =
     getEnemyPieces(enemyColor);
@@ -457,7 +463,7 @@ const getUnavailableSquares = (
     board,
     enemyColor,
     x,
-    y
+    y,
   );
   unavailableSquares_pawns.length &&
     unavailableSquares.push(...unavailableSquares_pawns);
@@ -468,7 +474,7 @@ const getUnavailableSquares = (
       board,
       enemyKnight,
       xCoord,
-      yCoord
+      yCoord,
     );
     unavailableSquares_knight.length &&
       unavailableSquares.push(...unavailableSquares_knight);
@@ -480,7 +486,7 @@ const getUnavailableSquares = (
       xCoord,
       yCoord,
       enemyColor,
-      CheckType.UNAVAVAILABLE
+      CheckType.UNAVAVAILABLE,
     );
 
     unavailableSquares_bishopOrQueen.length &&
@@ -493,7 +499,7 @@ const getUnavailableSquares = (
       xCoord,
       yCoord,
       enemyColor,
-      CheckType.UNAVAVAILABLE
+      CheckType.UNAVAVAILABLE,
     );
     unavailableSquares_RookOrQueen.length &&
       unavailableSquares.push(...unavailableSquares_RookOrQueen);
@@ -502,7 +508,7 @@ const getUnavailableSquares = (
       board,
       enemyKing,
       xCoord,
-      yCoord
+      yCoord,
     );
     unavailableSquares_king.length &&
       unavailableSquares.push(...unavailableSquares_king);
