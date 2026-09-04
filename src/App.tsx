@@ -18,13 +18,13 @@ function App() {
     <main className="game">
       <Timer
         time={formatTime(
-          playerColor === PieceColor.WHITE ? game.blackTime : game.whiteTime
+          playerColor === PieceColor.WHITE ? game.blackTime : game.whiteTime,
         )}
       />
       <Chessboard playerColor={playerColor} />
       <Timer
         time={formatTime(
-          playerColor === PieceColor.WHITE ? game.whiteTime : game.blackTime
+          playerColor === PieceColor.WHITE ? game.whiteTime : game.blackTime,
         )}
       />
       <ColorSelector value={playerColor} onChange={setPlayerColor} />

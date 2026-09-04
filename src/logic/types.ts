@@ -36,6 +36,8 @@ export type CastlingRights = {
 
 export type PromotionState = {
   isPromoting: boolean;
+  xFrom: number;
+  yFrom: number;
   x: number;
   y: number;
   color: string | null;
@@ -59,4 +61,5 @@ export type GameSound =
   | "castling"
   | "check"
   | "illegal"
-  | "gameEnd";
+  | "gameEnd"
+  | "promotion";

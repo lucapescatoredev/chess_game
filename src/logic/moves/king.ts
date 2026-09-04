@@ -356,8 +356,8 @@ const getSlidingChecks = (
 
   // When searching for unavailable squares, if any are found,
   // I also want to consider the square I started searching from as a possible valid square.
-  // // Example: if a bishop is checking the king, the king may be able to capture it,
-  // // provided the bishop is not protected by another piece.
+  // Example: if a bishop is checking the king, the king may be able to capture it,
+  // provided the bishop is not protected by another piece.
 
   if (checkType === CheckType.UNAVAVAILABLE) {
     checks.length && checks.push({ x, y });

@@ -22,6 +22,7 @@ import captureSoundUrl from "../sounds/capture.mp3";
 import illegalSoundUrl from "../sounds/illegal.mp3";
 import castleSoundUrl from "../sounds/castle.mp3";
 import gameEndSoundUrl from "../sounds/game-end.mp3";
+import promotionSoundUrl from "../sounds/promotion.mp3";
 import { useChessClock } from "./useChessClock";
 
 const initialState: GameState = {
@@ -41,6 +42,8 @@ const initialState: GameState = {
     isPromoting: false,
     x: -1,
     y: -1,
+    xFrom: -1,
+    yFrom: -1,
     color: null,
   },
   status: {
@@ -82,6 +85,7 @@ const soundUrls: Record<GameSound, string> = {
   check: checkSoundUrl,
   illegal: illegalSoundUrl,
   gameEnd: gameEndSoundUrl,
+  promotion: promotionSoundUrl,
 };
 
 const playGameSound = ({
@@ -105,6 +109,7 @@ const playGameSound = ({
     capture: "capture",
     castling: "castling",
     check: "check",
+    promotion: "promotion",
   };
   const sound = soundByGameState[newState.sound];
   if (sound) playSound(sound);
@@ -130,7 +135,7 @@ export function useChessGame() {
         if (audioContextRef.current === audioContext) {
           audioBuffersRef.current[sound as GameSound] = buffer;
         }
-      })
+      }),
     )
       .then(() => undefined)
       .catch((error) => {
@@ -207,6 +212,8 @@ export function useChessGame() {
       dispatch({ type: "move", position });
     },
     promote(piece: PromotionPiece) {
+      const nextState = promotePawn(state, piece);
+      playGameSound({ state, newState: nextState, playSound });
       dispatch({ type: "promote", piece });
     },
     reset() {

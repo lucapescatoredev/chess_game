@@ -1,10 +1,10 @@
 import { PIECES, PieceType } from "../../constants/pieces";
 import "./promotion.css";
 export const Promotion = ({ color, onPromote }) => {
-  const KNIGHT = `w${PieceType.KNIGHT}`;
-  const BISHOP = `w${PieceType.BISHOP}`;
-  const ROOK = `w${PieceType.ROOK}`;
-  const QUEEN = `w${PieceType.QUEEN}`;
+  const KNIGHT = `${color}${PieceType.KNIGHT}`;
+  const BISHOP = `${color}${PieceType.BISHOP}`;
+  const ROOK = `${color}${PieceType.ROOK}`;
+  const QUEEN = `${color}${PieceType.QUEEN}`;
   return (
     <div className="overlay">
       <div
@@ -14,14 +14,6 @@ export const Promotion = ({ color, onPromote }) => {
           const promotedPiece = target.dataset.piece;
           if (!promotedPiece) return;
           onPromote(promotedPiece);
-          // onIsPromoting(false);
-          // onBoardUpdate((board) => {
-          //   const updatedBoard = board.map((row) => [...row]);
-          //   updatedBoard[promotion.x][promotion.y] =
-          //     `${promotion.color}${promotedPiece}`;
-          //   pieceDropped.current = true;
-          //   return [...updatedBoard];
-          // });
         }}
       >
         <img className="modal-img" data-piece="N" src={PIECES[KNIGHT]}></img>

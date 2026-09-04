@@ -10,6 +10,7 @@ export const initialBoard = [
   ["wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP"],
   ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
 ];
+
 // export const initialBoard = [
 //   ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
 //   ["bP", "bP", "wP", "bP", "bP", "bP", "bP", "bP"],

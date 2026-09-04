@@ -21,8 +21,9 @@ import type {
 
 export const selectSquare = (
   state: GameState,
-  position: Position
+  position: Position,
 ): GameState => {
+  //if the player click on another pieces of the same color, legal moves are shown directly
   let sameColor = false;
   if (state.selected !== null) {
     const from = state.board[state.selected.x][state.selected.y];
@@ -59,7 +60,7 @@ export const selectSquare = (
       state.status,
       state.status.type === "check"
         ? state.status.checks.filter((check) => check.z !== -1)
-        : []
+        : [],
     ),
   };
 };
@@ -67,7 +68,7 @@ export const selectSquare = (
 export const playMove = (state: GameState, move: Move): GameState => {
   if (!state.selected) return state;
   const isLegal = state.legalMoves.some(
-    ({ x, y }) => x === move.x && y === move.y
+    ({ x, y }) => x === move.x && y === move.y,
   );
   if (!isLegal) {
     return {
@@ -79,12 +80,14 @@ export const playMove = (state: GameState, move: Move): GameState => {
   const board = state.board.map((row) => [...row]);
   const enemyColor = getEnemyColor(state.turn);
   const { x: xFrom, y: yFrom } = state.selected;
+
   const pieceMoved = board[xFrom][yFrom];
   const pieceCaptured = board[move.x][move.y];
   const captured = pieceCaptured !== null;
   board[xFrom][yFrom] = null;
   board[move.x][move.y] = pieceMoved;
   const color = state.turn;
+
   const [castled, king] = updateKingState(
     board,
     state.king,
@@ -92,16 +95,21 @@ export const playMove = (state: GameState, move: Move): GameState => {
     color,
     enemyColor,
     pieceMoved,
-    pieceCaptured
+    pieceCaptured,
   );
   const [enPassanted, enPassant] = updateEnPassantState(
     board,
     state.enPassant,
     { x: xFrom, y: yFrom },
     move,
-    color
+    color,
   );
-  const [promoted, promotion] = updatePromotionState(board, move, color);
+  const [promoted, promotion] = updatePromotionState(
+    board,
+    { x: xFrom, y: yFrom },
+    move,
+    color,
+  );
   const prevGameState: GameState = {
     ...state,
     board,
@@ -113,6 +121,7 @@ export const playMove = (state: GameState, move: Move): GameState => {
     promotion,
     status: { type: "playing" },
   };
+
   const evaluatedPosition: GameStatus = evaluatePosition(prevGameState);
   return {
     ...prevGameState,
@@ -122,14 +131,14 @@ export const playMove = (state: GameState, move: Move): GameState => {
       captured,
       castled,
       enPassanted,
-      promoted
+      promoted,
     ),
   };
 };
 
 export const promotePawn = (
   state: GameState,
-  piece: PromotionPiece
+  piece: PromotionPiece,
 ): GameState => {
   const promotion = state.promotion;
   if (!promotion.isPromoting || !promotion.color) return state;
@@ -142,15 +151,16 @@ export const promotePawn = (
       isPromoting: false,
       x: -1,
       y: -1,
+      xFrom: -1,
+      yFrom: -1,
       color: null,
     },
   };
-  // if (promotion.isPromoting) {
-  //   return nextState;
-  // }
+  const evaluatedPosition = evaluatePosition(nextState);
   return {
     ...nextState,
-    status: evaluatePosition(nextState),
+    status: evaluatedPosition,
+    sound: getMoveSound(evaluatedPosition, false, false, false, true),
   };
 };
 
@@ -180,8 +190,6 @@ const evaluatePosition = (state: GameState): GameStatus => {
       checks: checks,
     };
   }
-  // if (state.status.type === "capture") return { type: "capture" };
-  // if (state.status.type === "castling") return { type: "castling" };
 
   return { type: "playing" };
 };
@@ -192,7 +200,7 @@ const updateKingState = (
   color: PieceColor,
   enemyColor: PieceColor,
   pieceMoved: string,
-  pieceCaptured: string | null
+  pieceCaptured: string | null,
 ): [boolean, KingState] => {
   let castled = false;
   //if rook is captured or moved, I disable the corresponding castling side
@@ -255,7 +263,7 @@ const updateEnPassantState = (
   enPassant: EnPassantState,
   from: Move,
   to: Move,
-  color: PieceColor
+  color: PieceColor,
 ): [boolean, EnPassantState] => {
   let enPassanted = false;
   let enPassantState = { ...enPassantStarting };
@@ -275,21 +283,30 @@ const updateEnPassantState = (
 };
 const updatePromotionState = (
   board: string[][],
+  from: Move,
   to: Move,
-  color: PieceColor
+  color: PieceColor,
 ): [boolean, PromotionState] => {
   let promoted = false;
   //if a pawn reaches the last row successfully, it can promote
   if (board[to.x][to.y] !== `${color}${PieceType.PAWN}`)
-    return [promoted, { isPromoting: false, x: -1, y: -1, color: null }];
+    return [
+      promoted,
+      { isPromoting: false, x: -1, y: -1, xFrom: -1, yFrom: -1, color: null },
+    ];
   const lastRow = color === PieceColor.WHITE ? 0 : 7;
   if (to.x !== lastRow)
-    return [promoted, { isPromoting: false, x: -1, y: -1, color: null }];
+    return [
+      promoted,
+      { isPromoting: false, x: -1, y: -1, xFrom: -1, yFrom: -1, color: null },
+    ];
   promoted = true;
   return [
     promoted,
     {
       isPromoting: true,
+      xFrom: from.x,
+      yFrom: from.y,
       x: to.x,
       y: to.y,
       color: color,
@@ -304,14 +321,12 @@ const getMoveSound = (
   captured: boolean,
   castled: boolean,
   enPassanted: boolean,
-  promoted: boolean
+  promoted: boolean,
 ): string => {
   if (evaluatedPosition.type === "check") return "check";
-  // if (evaluatedPosition.type === "checkmate") return "checkmate";
-  // if (evaluatedPosition.type === "stalemate") return "stalemate";
+  if (promoted) return "promotion";
   if (captured) return "capture";
   if (castled) return "castling";
-  if (promoted) return "";
   if (enPassanted || captured) return "capture";
   return "playing";
 };
