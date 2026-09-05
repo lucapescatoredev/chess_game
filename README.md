@@ -6,5 +6,5 @@ Implemented from scratch:
 - Checkmate and stalemate detection
 
 # Still to implement
-- 3 Moves repetetion
+- 3 Moves repetition
 - 50 moves rules draw
