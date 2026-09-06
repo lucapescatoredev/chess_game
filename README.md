@@ -2,7 +2,7 @@
 
 Implemented from scratch: 
 - Legal moves generation
-- Special moves (such as en Passant, castling and promotion)
+- Special moves (such as en passant, castling and promotion)
 - Checkmate and stalemate detection
 
 # Still to implement
